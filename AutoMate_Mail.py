@@ -1,0 +1,47 @@
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import time
+
+# Your email credentials
+sender_email = "yourgmail@gmail.com"
+app_password = "your_app_password"
+
+# List of recipient emails
+recipients = [
+    "person1@example.com",
+    "person2@example.com",
+    "person3@example.com",
+]
+
+# Email content
+subject = "Hello from Python"
+body = "This email was sent automatically using Python."
+
+# Connect to Gmail SMTP server
+server = smtplib.SMTP("smtp.gmail.com", 587)
+server.starttls()
+server.login(sender_email, app_password)
+
+# Send emails one by one
+for recipient in recipients:
+
+    msg = MIMEMultipart()
+    msg["From"] = sender_email
+    msg["To"] = recipient
+    msg["Subject"] = subject
+
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        server.sendmail(sender_email, recipient, msg.as_string())
+        print(f"Email sent to {recipient}")
+
+        time.sleep(2)  # pause to avoid spam detection
+
+    except Exception as e:
+        print(f"Failed to send to {recipient}: {e}")
+
+server.quit()
+
+print("Done!")
